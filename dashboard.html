@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Moataz Performance Dashboard — NESTU Jordan</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --blue:     #3040C4;
+    --blue-lt:  #e8eaf6;
+    --bg:       #f8f9fc;
+    --card:     #ffffff;
+    --border:   #e2e5f1;
+    --text:     #1a1f36;
+    --muted:    #6b7280;
+    --green:    #16a34a;
+    --red:      #dc2626;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; }
+  header { background: var(--blue); color: #fff; padding: 18px 28px; display: flex; align-items: center; justify-content: space-between; }
+  header h1 { font-size: 1.25rem; font-weight: 700; letter-spacing: .02em; }
+  header p  { font-size: .8rem; opacity: .8; margin-top: 2px; }
+  .main { max-width: 1400px; margin: 0 auto; padding: 24px 20px; }
+
+  /* KPI cards */
+  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; margin-bottom: 24px; }
+  .kpi-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; }
+  .kpi-card .label { font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 6px; }
+  .kpi-card .value { font-size: 1.55rem; font-weight: 700; color: var(--blue); line-height: 1.1; }
+  .kpi-card .sub   { font-size: .78rem; margin-top: 4px; }
+
+  /* Charts */
+  .chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+  @media (max-width: 900px) { .chart-grid { grid-template-columns: 1fr; } }
+  .chart-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 18px; }
+  .chart-card h3 { font-size: .85rem; font-weight: 600; color: var(--muted); margin-bottom: 12px; text-transform: uppercase; letter-spacing: .05em; }
+  .chart-card canvas { max-height: 220px; }
+
+  /* Tables */
+  .section { background: var(--card); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 20px; overflow: hidden; }
+  .section-header { background: var(--blue); color: #fff; padding: 12px 18px; font-size: .88rem; font-weight: 600; letter-spacing: .04em; display: flex; align-items: center; gap: 8px; }
+  .section-header .badge { background: rgba(255,255,255,.2); border-radius: 99px; padding: 2px 8px; font-size: .75rem; }
+  .table-wrap { overflow-x: auto; max-height: 420px; overflow-y: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+  thead th { position: sticky; top: 0; background: var(--blue-lt); color: var(--blue); font-weight: 600; padding: 9px 12px; text-align: left; white-space: nowrap; cursor: pointer; user-select: none; }
+  thead th:hover { background: #d0d5f5; }
+  thead th.num, td.num { text-align: right; }
+  tbody tr:nth-child(even) { background: var(--bg); }
+  tbody tr:hover { background: #eef0fb; }
+  tbody td { padding: 8px 12px; border-bottom: 1px solid var(--border); }
+
+  .tier-badge { display: inline-block; padding: 2px 7px; border-radius: 99px; font-size: .7rem; font-weight: 600;
+    background: var(--blue-lt); color: var(--blue); white-space: nowrap; }
+  .partial-badge { display: inline-block; margin-left: 5px; padding: 1px 6px; border-radius: 99px; font-size: .65rem;
+    font-weight: 600; background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; white-space: nowrap;
+    vertical-align: middle; }
+
+  footer { text-align: center; color: var(--muted); font-size: .75rem; padding: 24px 0 32px; }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Moataz Alazzeh — Sales Performance Dashboard</h1>
+    <p>NESTU Jordan · Company ID 2 · Odoo 17</p>
+  </div>
+  <div style="text-align:right;font-size:.8rem;opacity:.85;">
+    Current Month: <strong>May 2026</strong><span class='partial-badge'>&#9888; Partial month</span>
+  </div>
+</header>
+
+<div class="main">
+
+<!-- KPI HEADER -->
+<div class="kpi-grid">
+  <div class="kpi-card">
+    <div class="label">Revenue MTD<span class='partial-badge'>&#9888; Partial month</span></div>
+    <div class="value">354.33</div>
+    <div class="sub" style="color:var(--muted)">JOD</div>
+  </div>
+  <div class="kpi-card">
+    <div class="label">MoM Change<span class='partial-badge'>&#9888; Partial month</span></div>
+    <div class="value" style="color:#dc2626">▼ 93.1%</div>
+    <div class="sub" style="color:var(--muted)">vs Apr 2026</div>
+  </div>
+  <div class="kpi-card">
+    <div class="label">Coverage %<span class='partial-badge'>&#9888; Partial month</span></div>
+    <div class="value">8.3%</div>
+    <div class="sub" style="color:var(--muted)">4 / 48 accounts</div>
+  </div>
+  <div class="kpi-card">
+    <div class="label">Accounts Visited MTD<span class='partial-badge'>&#9888; Partial month</span></div>
+    <div class="value">4</div>
+    <div class="sub" style="color:var(--muted)">unique accounts</div>
+  </div>
+  <div class="kpi-card">
+    <div class="label">Accounts w/ Revenue<span class='partial-badge'>&#9888; Partial month</span></div>
+    <div class="value">3</div>
+    <div class="sub" style="color:var(--muted)">posted invoices</div>
+  </div>
+  <div class="kpi-card">
+    <div class="label">Visits Logged MTD<span class='partial-badge'>&#9888; Partial month</span></div>
+    <div class="value">4</div>
+    <div class="sub" style="color:var(--muted)">total visits</div>
+  </div>
+</div>
+
+<!-- CHARTS -->
+<div class="chart-grid">
+  <div class="chart-card">
+    <h3>Monthly Revenue Trend (JOD)</h3>
+    <canvas id="chartRev"></canvas>
+  </div>
+  <div class="chart-card">
+    <h3>Monthly Visits Trend</h3>
+    <canvas id="chartVis"></canvas>
+  </div>
+  <div class="chart-card">
+    <h3>Coverage % Trend</h3>
+    <canvas id="chartCov"></canvas>
+  </div>
+  <div class="chart-card">
+    <h3>Activation &amp; Retention</h3>
+    <canvas id="chartCohort"></canvas>
+  </div>
+</div>
+
+<!-- TABLE A: Top Accounts -->
+<div class="section">
+  <div class="section-header">
+    Top Accounts by Revenue MTD
+    <span class="badge">May 2026</span>
+  </div>
+  <div class="table-wrap">
+    <table id="tblA">
+      <thead>
+        <tr>
+          <th onclick="sortTable('tblA',0)">Account Name</th>
+          <th onclick="sortTable('tblA',1)">Tier</th>
+          <th class="num" onclick="sortTable('tblA',2,true)">Revenue MTD (JOD)</th>
+          <th class="num" onclick="sortTable('tblA',3,true)">Revenue YTD (JOD)</th>
+          <th class="num" onclick="sortTable('tblA',4,true)">Visits MTD</th>
+          <th onclick="sortTable('tblA',5)">Last Visit</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr><td>PetsJo</td><td><span class='tier-badge'>Tier 1</span></td><td class='num'>264.67</td><td class='num'>2,609.98</td><td class='num'>0</td><td>—</td></tr>
+<tr><td>Mary pets</td><td><span class='tier-badge'>Tier 3</span></td><td class='num'>44.83</td><td class='num'>44.83</td><td class='num'>0</td><td>—</td></tr>
+<tr><td>Nature Spirit Pet Shop</td><td><span class='tier-badge'>Tier 3</span></td><td class='num'>44.83</td><td class='num'>575.88</td><td class='num'>0</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- TABLE B: Conversion Gap -->
+<div class="section">
+  <div class="section-header">
+    Conversion Gap — Visited but No Invoice
+    <span class="badge">May 2026</span>
+  </div>
+  <div class="table-wrap">
+    <table id="tblB">
+      <thead>
+        <tr>
+          <th onclick="sortTable('tblB',0)">Account Name</th>
+          <th onclick="sortTable('tblB',1)">Tier</th>
+          <th class="num" onclick="sortTable('tblB',2,true)">Visits MTD</th>
+          <th onclick="sortTable('tblB',3)">Last Visit</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr><td>Pet House - Khalda مؤسسة عقل الناطور لتجارة الحيوانات الاليفة</td><td><span class='tier-badge'>Tier 1</span></td><td class='num'>1</td><td>2026-05-03</td></tr>
+<tr><td>Infinity Pet Store</td><td><span class='tier-badge'>Tier 2</span></td><td class='num'>1</td><td>2026-05-03</td></tr>
+<tr><td>Partner 1000</td><td><span class='tier-badge'>Untiered</span></td><td class='num'>1</td><td>2026-05-03</td></tr>
+<tr><td>Pet house Khalda 2</td><td><span class='tier-badge'>Tier 1</span></td><td class='num'>1</td><td>2026-05-03</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- TABLE C: Tier Performance -->
+<div class="section">
+  <div class="section-header">
+    Tier Performance Summary
+    <span class="badge">May 2026</span>
+  </div>
+  <div class="table-wrap">
+    <table id="tblC">
+      <thead>
+        <tr>
+          <th onclick="sortTable('tblC',0)">Tier</th>
+          <th class="num" onclick="sortTable('tblC',1,true)"># Accounts</th>
+          <th class="num" onclick="sortTable('tblC',2,true)"># Visited MTD</th>
+          <th class="num" onclick="sortTable('tblC',3,true)">Coverage %</th>
+          <th class="num" onclick="sortTable('tblC',4,true)">Revenue MTD (JOD)</th>
+          <th class="num" onclick="sortTable('tblC',5,true)">Revenue YTD (JOD)</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr><td><span class='tier-badge'>Tier 1</span></td><td class='num'>13</td><td class='num'>2</td><td class='num'>15.4%</td><td class='num'>264.67</td><td class='num'>11,196.67</td></tr>
+<tr><td><span class='tier-badge'>Tier 2</span></td><td class='num'>25</td><td class='num'>1</td><td class='num'>4.0%</td><td class='num'>0.00</td><td class='num'>13,089.96</td></tr>
+<tr><td><span class='tier-badge'>Tier 3</span></td><td class='num'>10</td><td class='num'>0</td><td class='num'>0.0%</td><td class='num'>89.66</td><td class='num'>1,552.19</td></tr>
+<tr><td><span class='tier-badge'>Not Targeted</span></td><td class='num'>3</td><td class='num'>0</td><td class='num'>—</td><td class='num'>0.00</td><td class='num'>16.00</td></tr>
+<tr><td><span class='tier-badge'>Untiered</span></td><td class='num'>3</td><td class='num'>0</td><td class='num'>—</td><td class='num'>0.00</td><td class='num'>32.76</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- TABLE D: Cohort -->
+<div class="section">
+  <div class="section-header">Cohort — Activation &amp; Retention</div>
+  <div class="table-wrap">
+    <table id="tblD">
+      <thead>
+        <tr>
+          <th onclick="sortTable('tblD',0)">Month</th>
+          <th class="num" onclick="sortTable('tblD',1,true)">Active Accounts</th>
+          <th class="num" onclick="sortTable('tblD',2,true)">New</th>
+          <th class="num" onclick="sortTable('tblD',3,true)">Retained</th>
+          <th class="num" onclick="sortTable('tblD',4,true)">Churned</th>
+          <th class="num" onclick="sortTable('tblD',5,true)">Retention %</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr><td>May 2025</td><td class='num'>11</td><td class='num'>11</td><td class='num'>0</td><td class='num'>0</td><td class='num'>—</td></tr>
+<tr><td>Jun 2025</td><td class='num'>16</td><td class='num'>8</td><td class='num'>8</td><td class='num'>3</td><td class='num'>72.7%</td></tr>
+<tr><td>Jul 2025</td><td class='num'>18</td><td class='num'>5</td><td class='num'>12</td><td class='num'>4</td><td class='num'>75.0%</td></tr>
+<tr><td>Aug 2025</td><td class='num'>21</td><td class='num'>6</td><td class='num'>13</td><td class='num'>5</td><td class='num'>72.2%</td></tr>
+<tr><td>Sep 2025</td><td class='num'>24</td><td class='num'>5</td><td class='num'>17</td><td class='num'>4</td><td class='num'>81.0%</td></tr>
+<tr><td>Oct 2025</td><td class='num'>24</td><td class='num'>6</td><td class='num'>17</td><td class='num'>7</td><td class='num'>70.8%</td></tr>
+<tr><td>Nov 2025</td><td class='num'>27</td><td class='num'>6</td><td class='num'>17</td><td class='num'>7</td><td class='num'>70.8%</td></tr>
+<tr><td>Dec 2025</td><td class='num'>23</td><td class='num'>2</td><td class='num'>18</td><td class='num'>9</td><td class='num'>66.7%</td></tr>
+<tr><td>Jan 2026</td><td class='num'>24</td><td class='num'>4</td><td class='num'>18</td><td class='num'>5</td><td class='num'>78.3%</td></tr>
+<tr><td>Feb 2026</td><td class='num'>24</td><td class='num'>1</td><td class='num'>20</td><td class='num'>4</td><td class='num'>83.3%</td></tr>
+<tr><td>Mar 2026</td><td class='num'>27</td><td class='num'>2</td><td class='num'>21</td><td class='num'>3</td><td class='num'>87.5%</td></tr>
+<tr><td>Apr 2026</td><td class='num'>18</td><td class='num'>0</td><td class='num'>16</td><td class='num'>11</td><td class='num'>59.3%</td></tr>
+<tr><td>May 2026</td><td class='num'>3</td><td class='num'>1</td><td class='num'>2</td><td class='num'>16</td><td class='num'>11.1%</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</div><!-- /.main -->
+
+<footer>
+  Last refreshed: 05 May 2026, 14:29 Asia/Amman &nbsp;|&nbsp; Source: Odoo NESTU Jordan (company_id=2)
+</footer>
+
+<script>
+// ── Chart.js setup ─────────────────────────────────────────────────────────
+const BLUE   = '#3040C4';
+const BLUE2  = '#6875dc';
+const GREEN  = '#16a34a';
+const RED    = '#dc2626';
+const GRAY   = '#9ca3af';
+
+const labels6   = ["Dec 2025", "Jan 2026", "Feb 2026", "Mar 2026", "Apr 2026", "May 2026"];
+const dataRev   = [6965.07, 6879.8, 5137.84, 8485.03, 5116.8, 354.33];
+const dataVis   = [136, 18, 0, 0, 16, 4];
+const dataCov   = [95.8, 37.5, 0.0, 0.0, 33.3, 8.3];
+const cLabels   = ["Dec 2025", "Jan 2026", "Feb 2026", "Mar 2026", "Apr 2026", "May 2026"];
+const cNew      = [2, 4, 1, 2, 0, 1];
+const cRetained = [18, 18, 20, 21, 16, 2];
+const cChurned  = [9, 5, 4, 3, 11, 16];
+
+Chart.defaults.font.family = 'system-ui, sans-serif';
+Chart.defaults.font.size   = 12;
+
+new Chart(document.getElementById('chartRev'), {
+  type: 'bar',
+  data: {
+    labels: labels6,
+    datasets: [{ label: 'Revenue (JOD)', data: dataRev, backgroundColor: BLUE, borderRadius: 4 }]
+  },
+  options: {
+    plugins: { legend: { display: false } },
+    scales: { y: { beginAtZero: true, ticks: { callback: v => v.toLocaleString() } } }
+  }
+});
+
+new Chart(document.getElementById('chartVis'), {
+  type: 'line',
+  data: {
+    labels: labels6,
+    datasets: [{ label: 'Visits', data: dataVis, borderColor: BLUE, backgroundColor: 'rgba(48,64,196,.1)', tension: .35, fill: true, pointRadius: 4 }]
+  },
+  options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+});
+
+new Chart(document.getElementById('chartCov'), {
+  type: 'line',
+  data: {
+    labels: labels6,
+    datasets: [{ label: 'Coverage %', data: dataCov, borderColor: GREEN, backgroundColor: 'rgba(22,163,74,.1)', tension: .35, fill: true, pointRadius: 4 }]
+  },
+  options: {
+    plugins: { legend: { display: false } },
+    scales: { y: { beginAtZero: true, max: 100, ticks: { callback: v => v + '%' } } }
+  }
+});
+
+new Chart(document.getElementById('chartCohort'), {
+  type: 'bar',
+  data: {
+    labels: cLabels,
+    datasets: [
+      { label: 'New',      data: cNew,      backgroundColor: GREEN,  borderRadius: 3 },
+      { label: 'Retained', data: cRetained, backgroundColor: BLUE,   borderRadius: 3 },
+      { label: 'Churned',  data: cChurned,  backgroundColor: RED,    borderRadius: 3 },
+    ]
+  },
+  options: {
+    plugins: { legend: { position: 'bottom' } },
+    scales: { x: { stacked: true }, y: { stacked: false, beginAtZero: true } }
+  }
+});
+
+// ── Sort tables ─────────────────────────────────────────────────────────────
+const sortState = {};
+function sortTable(id, col, numeric=false) {
+  const tbl  = document.getElementById(id);
+  const tbody = tbl.querySelector('tbody');
+  const rows  = Array.from(tbody.querySelectorAll('tr'));
+  const key   = id + '_' + col;
+  sortState[key] = !sortState[key];
+  const asc = sortState[key];
+  rows.sort((a, b) => {
+    const av = a.cells[col]?.innerText.replace(/[,%]/g, '').trim() || '';
+    const bv = b.cells[col]?.innerText.replace(/[,%]/g, '').trim() || '';
+    if (numeric) return asc ? (parseFloat(av)||0) - (parseFloat(bv)||0)
+                            : (parseFloat(bv)||0) - (parseFloat(av)||0);
+    return asc ? av.localeCompare(bv) : bv.localeCompare(av);
+  });
+  rows.forEach(r => tbody.appendChild(r));
+  // update header indicators
+  tbl.querySelectorAll('thead th').forEach((th,i) => {
+    th.textContent = th.textContent.replace(/ [▲▼]$/,'');
+    if (i === col) th.textContent += asc ? ' ▲' : ' ▼';
+  });
+}
+</script>
+</body>
+</html>
