@@ -36,7 +36,8 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          git reset --soft origin/main
           git add dashboard.html
           git diff --staged --quiet || git commit -m "Dashboard refresh $(date -u +'%Y-%m-%d %H:%M UTC')"
-          git pull --rebase origin main
-          git push
+          git push origin main
