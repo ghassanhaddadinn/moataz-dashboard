@@ -201,12 +201,12 @@ def fetch_visits(models, uid):
     return records
 
 def fetch_all_partners(models, uid):
-    """Fetch ALL res.partner for user_id=23 — no customer_rank filter — for plan matching."""
+    """Fetch ALL res.partner for user_id=23 — no customer_rank filter — for plan matching and tier lookup."""
     domain = [
         ["user_id",    "=",  USER_ID],
         ["company_id", "in", [COMPANY_ID, False]],
     ]
-    fields = ["id", "name"]
+    fields = ["id", "name", "x_studio_tier_1"]
     try:
         records = models.execute_kw(
             ODOO_DB, uid, ODOO_API_KEY,
@@ -327,22 +327,23 @@ def build_monthly_structures(invoices, accounts, visits):
     """
     # ── Account lookup ──────────────────────────────────────────────────────
     account_map = {}  # partner_id -> {name, tier}
+    coverage_partner_ids = set()
     for a in accounts:
         tier = a.get("x_studio_tier_1") or None
         account_map[a["id"]] = {
             "name": a.get("name", ""),
             "tier": tier,
         }
+        if tier in COVERAGE_TIERS:
+            coverage_partner_ids.add(a["id"])
 
-    coverage_denom = sum(
-        1 for a in accounts
-        if (a.get("x_studio_tier_1") or None) in COVERAGE_TIERS
-    )
+    coverage_denom = len(coverage_partner_ids)
 
     # ── Monthly invoice aggregates ──────────────────────────────────────────
     # inv_month[ym] = {partner_id: revenue}
     inv_month = defaultdict(lambda: defaultdict(float))
     inv_ytd   = defaultdict(float)   # partner_id -> YTD revenue
+    inv_ever  = set()                # partner_ids with any posted invoice (all time)
 
     for r in invoices:
         d = r.get("invoice_date")
@@ -354,6 +355,7 @@ def build_monthly_structures(invoices, accounts, visits):
             continue
         amt = r.get("amount_untaxed", 0) or 0
         inv_month[ym][pid] += amt
+        inv_ever.add(pid)
 
     # YTD (current year)
     current_year = datetime.now().year
@@ -390,12 +392,14 @@ def build_monthly_structures(invoices, accounts, visits):
     all_months = sorted(set(list(inv_month.keys()) + list(vis_month.keys())))
 
     return {
-        "account_map":     account_map,
-        "coverage_denom":  coverage_denom,
-        "inv_month":       inv_month,
-        "inv_ytd":         inv_ytd,
-        "vis_month":       vis_month,
-        "all_months":      all_months,
+        "account_map":          account_map,
+        "coverage_denom":       coverage_denom,
+        "coverage_partner_ids": coverage_partner_ids,
+        "inv_month":            inv_month,
+        "inv_ytd":              inv_ytd,
+        "inv_ever":             inv_ever,
+        "vis_month":            vis_month,
+        "all_months":           all_months,
     }
 
 # ─── TOP ACCOUNTS ─────────────────────────────────────────────────────────────
@@ -562,35 +566,57 @@ def build_cohort_data(ms):
 def build_execution_table(ms, all_partners, current_ym):
     inv_month = ms["inv_month"]
     inv_ytd   = ms["inv_ytd"]
+    inv_ever  = ms["inv_ever"]   # set of partner_ids with any posted invoice ever
     vis_month = ms["vis_month"]
 
     month_inv = inv_month.get(current_ym, {})
     month_vis = vis_month.get(current_ym, {})
 
-    # Build normalized name -> partner_id lookup from all partners
-    norm_map = {}   # normalized_name -> partner_id
-    name_map = {}   # partner_id -> original name
+    # Build lookups from all_partners (includes x_studio_tier_1)
+    norm_map     = {}   # normalized_name -> partner_id
+    partner_tier = {}   # partner_id -> raw tier key from Odoo
     for p in all_partners:
         norm = p["name"].strip().lower()
         norm_map[norm] = p["id"]
-        name_map[p["id"]] = p["name"]
+        raw_tier = p.get("x_studio_tier_1") or None
+        partner_tier[p["id"]] = raw_tier
 
     def find_partner(plan_name):
         norm_plan = plan_name.strip().lower()
-        # Exact match
         if norm_plan in norm_map:
             return norm_map[norm_plan]
-        # Partial: plan name contained in any partner name
         for norm_p, pid in norm_map.items():
             if norm_plan in norm_p or norm_p in norm_plan:
                 return pid
         return None
 
     rows = []
-    for plan_name, tier_num, penetration, target_fy in TARGETED_ACCOUNTS:
-        pid = find_partner(plan_name)
+    pen_corrections = []   # accounts marked NO in plan but have live Odoo invoices
+
+    for plan_name, tier_num, plan_penetration, target_fy in TARGETED_ACCOUNTS:
+        pid        = find_partner(plan_name)
         odoo_match = pid is not None
 
+        # ── Live penetration from Odoo invoice history ─────────────────────
+        if odoo_match:
+            live_penetrated = pid in inv_ever
+        else:
+            live_penetrated = False
+
+        if live_penetrated and plan_penetration == "NO":
+            pen_corrections.append(plan_name)
+
+        penetration = "Penetrated" if live_penetrated else "NO"
+
+        # ── Live tier from Odoo, fallback to plan tier ────────────────────
+        if odoo_match:
+            raw_tier = partner_tier.get(pid)
+            odoo_tier_label = TIER_LABELS.get(raw_tier) if raw_tier else None
+            tier_label = odoo_tier_label or PLAN_TIER_LABELS.get(tier_num, f"Tier {tier_num}")
+        else:
+            tier_label = PLAN_TIER_LABELS.get(tier_num, f"Tier {tier_num}")
+
+        # ── Activity for current month ─────────────────────────────────────
         visits_list  = month_vis.get(pid, []) if pid else []
         visited_mtd  = len(visits_list) > 0
         invoiced_mtd = pid in month_inv if pid else False
@@ -598,7 +624,6 @@ def build_execution_table(ms, all_partners, current_ym):
         revenue_ytd  = inv_ytd.get(pid, 0.0) if pid else 0.0
         last_visit   = max(visits_list).strftime("%Y-%m-%d") if visits_list else ""
 
-        # Sort group: 1=both, 2=visited only, 3=invoiced only, 4=matched/no activity, 5=not in Odoo
         if not odoo_match:
             sort_group = 5
         elif visited_mtd and invoiced_mtd:
@@ -612,7 +637,7 @@ def build_execution_table(ms, all_partners, current_ym):
 
         rows.append({
             "plan_name":       plan_name,
-            "tier":            PLAN_TIER_LABELS.get(tier_num, f"Tier {tier_num}"),
+            "tier":            tier_label,
             "penetration":     penetration,
             "target_fy":       target_fy,
             "odoo_partner_id": pid,
@@ -630,16 +655,23 @@ def build_execution_table(ms, all_partners, current_ym):
 
     matched   = sum(1 for r in rows if r["odoo_match"])
     unmatched = len(rows) - matched
+    pen_yes   = sum(1 for r in rows if r["penetration"] == "Penetrated")
     print(f"[PLAN] {len(rows)} targeted accounts: {matched} matched in Odoo, {unmatched} not found")
+    print(f"[PLAN] {pen_yes} accounts Penetrated (have sales) derived live from Odoo")
+    if pen_corrections:
+        print(f"[PLAN] {len(pen_corrections)} accounts corrected NO -> Penetrated (plan outdated):")
+        for name in pen_corrections:
+            print(f"       * {name}")
     return rows
 
 # ─── RENDER DASHBOARD ─────────────────────────────────────────────────────────
 def render_dashboard(ms, invoices, accounts, visits, all_partners, validation_summary):
-    account_map    = ms["account_map"]
-    coverage_denom = ms["coverage_denom"]
-    inv_month      = ms["inv_month"]
-    vis_month      = ms["vis_month"]
-    all_months     = ms["all_months"]
+    account_map          = ms["account_map"]
+    coverage_denom       = ms["coverage_denom"]
+    coverage_partner_ids = ms["coverage_partner_ids"]
+    inv_month            = ms["inv_month"]
+    vis_month            = ms["vis_month"]
+    all_months           = ms["all_months"]
 
     if not all_months:
         sys.exit("[ERROR] No data found. Cannot render dashboard.")
@@ -653,19 +685,22 @@ def render_dashboard(ms, invoices, accounts, visits, all_partners, validation_su
     rev_prev = sum(inv_month.get(prev_ym, {}).values()) if prev_ym else 0
     mom_pct  = ((rev_mtd - rev_prev) / rev_prev * 100) if rev_prev else None
 
-    vis_cur       = vis_month.get(current_ym, {})
-    visits_mtd    = sum(len(v) for v in vis_cur.values())
-    accts_visited = len(vis_cur)
-    accts_revenue = len(inv_month.get(current_ym, {}))
+    vis_cur           = vis_month.get(current_ym, {})
+    visits_mtd        = sum(len(v) for v in vis_cur.values())
+    accts_visited     = len(vis_cur)
+    accts_revenue     = len(inv_month.get(current_ym, {}))
 
-    cov_pct = round(accts_visited / coverage_denom * 100, 1) if coverage_denom else 0
+    # Coverage: numerator = visited partners that are in coverage-tier set
+    visited_in_coverage = len(set(vis_cur.keys()) & coverage_partner_ids)
+    cov_pct = round(visited_in_coverage / coverage_denom * 100, 1) if coverage_denom else 0
 
     # Chart data
     chart_months = [_ym_label(m) for m in last_6]
     chart_rev    = [round(sum(inv_month.get(m, {}).values()), 2) for m in last_6]
     chart_vis    = [sum(len(v) for v in vis_month.get(m, {}).values()) for m in last_6]
     chart_cov    = [
-        round(len(vis_month.get(m, {})) / coverage_denom * 100, 1) if coverage_denom else 0
+        round(len(set(vis_month.get(m, {}).keys()) & coverage_partner_ids) / coverage_denom * 100, 1)
+        if coverage_denom else 0
         for m in last_6
     ]
 
@@ -901,7 +936,7 @@ def render_dashboard(ms, invoices, accounts, visits, all_partners, validation_su
   <div class="kpi-card">
     <div class="label">Coverage %{partial_badge}</div>
     <div class="value">{cov_pct}%</div>
-    <div class="sub" style="color:var(--muted)">{accts_visited} / {coverage_denom} accounts</div>
+    <div class="sub" style="color:var(--muted)">{visited_in_coverage} / {coverage_denom} coverage-tier accounts</div>
   </div>
   <div class="kpi-card">
     <div class="label">Accounts Visited MTD{partial_badge}</div>
