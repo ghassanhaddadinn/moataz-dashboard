@@ -2,8 +2,8 @@ name: Refresh Moataz Dashboard
 
 on:
   schedule:
-    - cron: '0 4 * * *'   # 7:00am Asia/Amman (UTC+3)
-  workflow_dispatch: {}    # Manual trigger button in GitHub UI
+    - cron: '0 4 * * *'
+  workflow_dispatch: {}
 
 permissions:
   contents: write
