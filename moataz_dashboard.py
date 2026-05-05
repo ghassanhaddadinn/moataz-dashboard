@@ -37,7 +37,7 @@ TARGETED_ACCOUNTS = [
     ("4 Pets (مؤسسة سعد حسان لبيع مستلزمات الحيوانات الأليفة)",         1, "Penetrated",  8000),
     ("Best Buddies",                                                       3, "Penetrated",  None),
     ("Pet Mart",                                                           2, "Penetrated",  None),
-    ("VIP Pet Shop Abdoun",                                                1, "Penetrated",  5000),
+    ("جبل ارارت لتربية الحيوانات الاليفة - Abdoun",                        1, "Penetrated",  5000),
     ("Jo Pet Zone - Al-Sweifieh",                                          1, "NO",          3000),
     ("Mr.Pet/PetBuzz",                                                     1, "NO",          None),
     ("Asia Pet Shop",                                                      2, "NO",          1000),
@@ -61,7 +61,7 @@ TARGETED_ACCOUNTS = [
     ("Infinity Pet Store",                                                 2, "Penetrated",  2000),
     ("Pet Zone Khalda",                                                    2, "NO",          None),
     ("Nemo pet store",                                                     2, "NO",          1000),
-    ("VIP Pet Shop Dabouq",                                                1, "Penetrated",  6000),
+    ("جبل ارارت لتربية الحيوانات الاليفة - Dabouq",                        1, "Penetrated",  6000),
     ("The Pet Hood",                                                       2, "Penetrated",  8000),
     ("Pure Pet Shop",                                                      2, "NO",          1500),
     ("The Black Wolf Dabouq",                                              2, "NO",          1000),
@@ -70,7 +70,6 @@ TARGETED_ACCOUNTS = [
     ("Phoenix/Sadeen Pet shop",                                            2, "Penetrated",  3000),
     ("Adam's Pet Shop",                                                    2, "NO",          1000),
     ("Pets Galaxy",                                                        2, "Penetrated",  4500),
-    ("Pet Shop L&M Abu Alanda",                                            2, "NO",          None),
     ("WaterBox Aquatics",                                                  2, "Penetrated",  None),
     ("Whispered Natutre Pet Shop",                                         3, "NO",           600),
     ("Pet Mania",                                                          2, "Penetrated",  1000),
@@ -107,7 +106,6 @@ TARGETED_ACCOUNTS = [
     ("AlSharis Pet Shop",                                                  3, "NO",          None),
     ("Oliver Pets Al Nakhil",                                              2, "NO",          None),
     ("Alpha Pet Shop",                                                     2, "NO",           600),
-    ("L&M Pet Shop Al Hurreyya St.",                                       2, "NO",          None),
     ("Pet Rangers",                                                        2, "NO",          1000),
     ("Aleef Pet shop",                                                     3, "NO",           600),
     ("Pet Boulevard",                                                      2, "NO",          None),
@@ -127,7 +125,8 @@ TARGETED_ACCOUNTS = [
     ("عالم الكناري للحيوانات",  3, "NO",          None),
     ("Zoo Pet Store",                                                      3, "NO",          None),
     ("Star Pets",                                                          3, "NO",          None),
-    ("Doge Toys",                                                          2, "Penetrated",  7000),
+    ("محمد الحموي لاغذية الحيوانات و لوازمها 1",                           2, "Penetrated",  7000),
+    ("محمد الحموي لاغذية الحيوانات و لوازمها 2",                           2, "Penetrated",  7000),
 ]
 
 PLAN_TIER_LABELS = {1: "Tier 1", 2: "Tier 2", 3: "Tier 3"}
