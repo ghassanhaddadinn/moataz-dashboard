@@ -30,6 +30,108 @@ TIER_LABELS = {
 }
 COVERAGE_TIERS = {"KA", "1", "2", "3"}
 
+# ─── TARGETED ACCOUNTS (official plan, 95 accounts) ───────────────────────────
+# Tuple: (plan_name, tier_num, penetration_status, target_fy_jod)
+TARGETED_ACCOUNTS = [
+    ("Jo Pet Zone - Al-Weibdeh",                                         1, "NO",          3000),
+    ("4 Pets (مؤسسة سعد حسان لبيع مستلزمات الحيوانات الأليفة)",         1, "Penetrated",  8000),
+    ("Best Buddies",                                                       3, "Penetrated",  None),
+    ("Pet Mart",                                                           2, "Penetrated",  None),
+    ("VIP Pet Shop Abdoun",                                                1, "Penetrated",  5000),
+    ("Jo Pet Zone - Al-Sweifieh",                                          1, "NO",          3000),
+    ("Mr.Pet/PetBuzz",                                                     1, "NO",          None),
+    ("Asia Pet Shop",                                                      2, "NO",          1000),
+    ("Amman Mart/Amman Pets Express",                                      1, "NO",          1000),
+    ("Pet Express",                                                        1, "NO",          1500),
+    ("Amman Pets",                                                         1, "NO",          None),
+    ("Zoo Keeper",                                                         1, "Penetrated",  8000),
+    ("Smart pet",                                                          2, "NO",          1200),
+    ("Pet Panda",                                                          2, "NO",          None),
+    ("Mimz Pet Mall",                                                      3, "NO",          1000),
+    ("Pet Castle",                                                         2, "Penetrated",  4000),
+    ("Green Island Pet Shop",                                              3, "Penetrated",  1000),
+    ("Jaguar Pet Store",                                                   3, "NO",          1000),
+    ("Lucky Pet Shop",                                                     2, "NO",          2000),
+    ("Pet oasis",                                                          2, "NO",          1000),
+    ("Pet Moon",                                                           2, "Penetrated",  2000),
+    ("My Pets",                                                            2, "Penetrated",  None),
+    ("Shmeisani Pet Shop",                                                 2, "NO",          1000),
+    ("Pet House - Khalda",                                                 1, "Penetrated",  3000),
+    ("Pet House - Tlaa' Al-Ali",                                           2, "Penetrated",  1000),
+    ("Infinity Pet Store",                                                 2, "Penetrated",  2000),
+    ("Pet Zone Khalda",                                                    2, "NO",          None),
+    ("Nemo pet store",                                                     2, "NO",          1000),
+    ("VIP Pet Shop Dabouq",                                                1, "Penetrated",  6000),
+    ("The Pet Hood",                                                       2, "Penetrated",  8000),
+    ("Pure Pet Shop",                                                      2, "NO",          1500),
+    ("The Black Wolf Dabouq",                                              2, "NO",          1000),
+    ("Pet House - Al-Fuheis",                                              2, "NO",          1000),
+    ("Jolly Pet Shop",                                                     2, "NO",          1000),
+    ("Phoenix/Sadeen Pet shop",                                            2, "Penetrated",  3000),
+    ("Adam's Pet Shop",                                                    2, "NO",          1000),
+    ("Pets Galaxy",                                                        2, "Penetrated",  4500),
+    ("Pet Shop L&M Abu Alanda",                                            2, "NO",          None),
+    ("WaterBox Aquatics",                                                  2, "Penetrated",  None),
+    ("Whispered Natutre Pet Shop",                                         3, "NO",           600),
+    ("Pet Mania",                                                          2, "Penetrated",  1000),
+    ("Cheetah Pet Shop Saru",                                              3, "NO",          None),
+    ("Xtreme Pet Center Saru",                                             3, "NO",          None),
+    ("Pets Daily Pet Shop",                                                1, "NO",          2000),
+    ("Nature Spirit Pet Shop",                                             3, "Penetrated",  None),
+    ("Scooby Doo Abu Nsair",                                               3, "NO",          None),
+    ("Pet Panda Shafa Badran",                                             2, "NO",          None),
+    ("Paws&Claws Pet Store",                                               3, "NO",          1000),
+    ("Nemo Pet Store Jubeiha",                                             2, "NO",          1000),
+    ("ريش وفرو",                        2, "NO",          None),
+    ("Sea horse 2",                                                        2, "Penetrated",  1200),
+    ("Black Wolf Pet Shop",                                                2, "NO",           600),
+    ("K Pet Shop",                                                         3, "Penetrated",  None),
+    ("Victoria pet store",                                                 2, "NO",           600),
+    ("Kanari Heba 1",                                                      1, "Penetrated",  1000),
+    ("Kanari Heba Tabarbour 2",                                            1, "NO",           500),
+    ("Canari hamoudh Al-Hashmi",                                           2, "Penetrated",  1500),
+    ("كناري شوق Al Hashmi",        3, "NO",          None),
+    ("PAWsitive Nuzha",                                                    3, "NO",          None),
+    ("طيور المعتز",      3, "Penetrated",  None),
+    ("Talia Pet Shop",                                                     2, "NO",          1000),
+    ("Pet Stop",                                                           1, "Penetrated",  1000),
+    ("Active Pet",                                                         1, "Penetrated",  2000),
+    ("Pets Galaxy 2",                                                      3, "Penetrated",  1500),
+    ("Castle Pet Marj Al Hamam",                                           1, "NO",          1500),
+    ("Spider Pet Shop Marj Al Hamam",                                      2, "NO",          None),
+    ("Pet Town",                                                           3, "NO",          1500),
+    ("Pet Home Marj Al Hamam",                                             3, "NO",          None),
+    ("Pets City Marj Al Hamam",                                            3, "NO",          None),
+    ("Mera Pet Shop",                                                      3, "Penetrated",   500),
+    ("Garfield pet shop",                                                  3, "NO",          None),
+    ("AlSharis Pet Shop",                                                  3, "NO",          None),
+    ("Oliver Pets Al Nakhil",                                              2, "NO",          None),
+    ("Alpha Pet Shop",                                                     2, "NO",           600),
+    ("L&M Pet Shop Al Hurreyya St.",                                       2, "NO",          None),
+    ("Pet Rangers",                                                        2, "NO",          1000),
+    ("Aleef Pet shop",                                                     3, "NO",           600),
+    ("Pet Boulevard",                                                      2, "NO",          None),
+    ("Fox pet shop",                                                       3, "NO",          1000),
+    ("رفق لمستلزمات الحيوانات",  3, "NO",          1000),
+    ("Paradise Pet Store",                                                 3, "NO",          None),
+    ("JK9 Center",                                                         1, "NO",          None),
+    ("BoosBoss Pet Shop",                                                  3, "NO",          None),
+    ("أبو جرير لمستلزمات الحيوانات الأليفة",  3, "NO",          None),
+    ("Scottish Shop",                                                      3, "NO",          None),
+    ("Cat Cafe",                                                           2, "NO",          None),
+    ("Jungle Pet Shop",                                                    3, "NO",          None),
+    ("Animal Planet",                                                      3, "NO",          None),
+    ("Sporty Pet",                                                         1, "NO",          1000),
+    ("Paws Corner",                                                        3, "NO",          None),
+    ("Ocean Pet Store",                                                    3, "NO",          None),
+    ("عالم الكناري للحيوانات",  3, "NO",          None),
+    ("Zoo Pet Store",                                                      3, "NO",          None),
+    ("Star Pets",                                                          3, "NO",          None),
+    ("Doge Toys",                                                          2, "Penetrated",  7000),
+]
+
+PLAN_TIER_LABELS = {1: "Tier 1", 2: "Tier 2", 3: "Tier 3"}
+
 # ─── CONNECT ──────────────────────────────────────────────────────────────────
 def connect_odoo():
     if not ODOO_USERNAME or not ODOO_API_KEY:
@@ -97,6 +199,24 @@ def fetch_visits(models, uid):
     except Exception as e:
         sys.exit(f"[ERROR] fetch_visits failed: {e}")
     print(f"[FETCH] {len(records)} visits")
+    return records
+
+def fetch_all_partners(models, uid):
+    """Fetch ALL res.partner for user_id=23 — no customer_rank filter — for plan matching."""
+    domain = [
+        ["user_id",    "=",  USER_ID],
+        ["company_id", "in", [COMPANY_ID, False]],
+    ]
+    fields = ["id", "name"]
+    try:
+        records = models.execute_kw(
+            ODOO_DB, uid, ODOO_API_KEY,
+            "res.partner", "search_read",
+            [domain], {"fields": fields, "limit": 0}
+        )
+    except Exception as e:
+        sys.exit(f"[ERROR] fetch_all_partners failed: {e}")
+    print(f"[FETCH] {len(records)} total partners (for plan matching)")
     return records
 
 # ─── VALIDATE ─────────────────────────────────────────────────────────────────
@@ -439,8 +559,83 @@ def build_cohort_data(ms):
 
     return rows
 
+# ─── EXECUTION TABLE ──────────────────────────────────────────────────────────
+def build_execution_table(ms, all_partners, current_ym):
+    inv_month = ms["inv_month"]
+    inv_ytd   = ms["inv_ytd"]
+    vis_month = ms["vis_month"]
+
+    month_inv = inv_month.get(current_ym, {})
+    month_vis = vis_month.get(current_ym, {})
+
+    # Build normalized name -> partner_id lookup from all partners
+    norm_map = {}   # normalized_name -> partner_id
+    name_map = {}   # partner_id -> original name
+    for p in all_partners:
+        norm = p["name"].strip().lower()
+        norm_map[norm] = p["id"]
+        name_map[p["id"]] = p["name"]
+
+    def find_partner(plan_name):
+        norm_plan = plan_name.strip().lower()
+        # Exact match
+        if norm_plan in norm_map:
+            return norm_map[norm_plan]
+        # Partial: plan name contained in any partner name
+        for norm_p, pid in norm_map.items():
+            if norm_plan in norm_p or norm_p in norm_plan:
+                return pid
+        return None
+
+    rows = []
+    for plan_name, tier_num, penetration, target_fy in TARGETED_ACCOUNTS:
+        pid = find_partner(plan_name)
+        odoo_match = pid is not None
+
+        visits_list  = month_vis.get(pid, []) if pid else []
+        visited_mtd  = len(visits_list) > 0
+        invoiced_mtd = pid in month_inv if pid else False
+        revenue_mtd  = month_inv.get(pid, 0.0) if pid else 0.0
+        revenue_ytd  = inv_ytd.get(pid, 0.0) if pid else 0.0
+        last_visit   = max(visits_list).strftime("%Y-%m-%d") if visits_list else ""
+
+        # Sort group: 1=both, 2=visited only, 3=invoiced only, 4=matched/no activity, 5=not in Odoo
+        if not odoo_match:
+            sort_group = 5
+        elif visited_mtd and invoiced_mtd:
+            sort_group = 1
+        elif visited_mtd and not invoiced_mtd:
+            sort_group = 2
+        elif not visited_mtd and invoiced_mtd:
+            sort_group = 3
+        else:
+            sort_group = 4
+
+        rows.append({
+            "plan_name":       plan_name,
+            "tier":            PLAN_TIER_LABELS.get(tier_num, f"Tier {tier_num}"),
+            "penetration":     penetration,
+            "target_fy":       target_fy,
+            "odoo_partner_id": pid,
+            "odoo_match":      odoo_match,
+            "visited_mtd":     visited_mtd,
+            "invoiced_mtd":    invoiced_mtd,
+            "revenue_mtd":     revenue_mtd,
+            "revenue_ytd":     revenue_ytd,
+            "last_visit_date": last_visit,
+            "visit_count_mtd": len(visits_list),
+            "sort_group":      sort_group,
+        })
+
+    rows.sort(key=lambda r: (r["sort_group"], -r["revenue_ytd"]))
+
+    matched   = sum(1 for r in rows if r["odoo_match"])
+    unmatched = len(rows) - matched
+    print(f"[PLAN] {len(rows)} targeted accounts: {matched} matched in Odoo, {unmatched} not found")
+    return rows
+
 # ─── RENDER DASHBOARD ─────────────────────────────────────────────────────────
-def render_dashboard(ms, invoices, accounts, visits, validation_summary):
+def render_dashboard(ms, invoices, accounts, visits, all_partners, validation_summary):
     account_map    = ms["account_map"]
     coverage_denom = ms["coverage_denom"]
     inv_month      = ms["inv_month"]
@@ -486,6 +681,10 @@ def render_dashboard(ms, invoices, accounts, visits, validation_summary):
     conv_gap       = build_conversion_gap(ms, current_ym)
     tier_perf      = build_tier_performance(ms, accounts, current_ym)
     cohort_rows    = cohort_data
+    exec_rows      = build_execution_table(ms, all_partners, current_ym)
+
+    exec_visited_count  = sum(1 for r in exec_rows if r["visited_mtd"])
+    exec_invoiced_count = sum(1 for r in exec_rows if r["invoiced_mtd"])
 
     # Timestamps
     now_amman = datetime.now(tz=TZ_AMMAN)
@@ -565,6 +764,43 @@ def render_dashboard(ms, invoices, accounts, visits, validation_summary):
             )
         return "\n".join(rows) if rows else "<tr><td colspan='6'>No data</td></tr>"
 
+    def exec_table_rows():
+        ROW_COLORS = {
+            1: "background:#f0fdf4",   # visited + invoiced -> light green
+            2: "background:#fefce8",   # visited only       -> light yellow
+            3: "background:#eff6ff",   # invoiced only      -> light blue
+            4: "background:#ffffff",   # no activity        -> white
+            5: "background:#f9fafb",   # not in Odoo        -> light gray
+        }
+        out = []
+        for i, r in enumerate(exec_rows, 1):
+            style    = ROW_COLORS.get(r["sort_group"], "")
+            vis_icon = "<span class='check-yes'>&#10003;</span>" if r["visited_mtd"]  else "<span class='check-no'>&#8212;</span>"
+            inv_icon = "<span class='check-yes'>&#10003;</span>" if r["invoiced_mtd"] else "<span class='check-no'>&#8212;</span>"
+            odoo_col = "<span class='odoo-yes'>&#10003;</span>"  if r["odoo_match"]   else "<span class='odoo-no'>?</span>"
+            pen_cls  = "pen-yes" if r["penetration"] == "Penetrated" else "pen-no"
+            pen_lbl  = r["penetration"] if r["penetration"] == "Penetrated" else "NO"
+            target   = f"{r['target_fy']:,}" if r["target_fy"] else "&#8212;"
+            rev_mtd  = fmt_jod(r["revenue_mtd"]) if r["revenue_mtd"] else "&#8212;"
+            rev_ytd  = fmt_jod(r["revenue_ytd"]) if r["revenue_ytd"] else "&#8212;"
+            lv       = r["last_visit_date"] or "&#8212;"
+            out.append(
+                f"<tr style='{style}'>"
+                f"<td class='num-sm'>{i}</td>"
+                f"<td>{r['plan_name']}</td>"
+                f"<td><span class='tier-badge'>{r['tier']}</span></td>"
+                f"<td><span class='pen-badge {pen_cls}'>{pen_lbl}</span></td>"
+                f"<td class='num-sm'>{target}</td>"
+                f"<td style='text-align:center'>{vis_icon}</td>"
+                f"<td style='text-align:center'>{inv_icon}</td>"
+                f"<td class='num-sm'>{rev_mtd}</td>"
+                f"<td class='num-sm'>{rev_ytd}</td>"
+                f"<td>{lv}</td>"
+                f"<td style='text-align:center'>{odoo_col}</td>"
+                f"</tr>"
+            )
+        return "\n".join(out) if out else "<tr><td colspan='11'>No data</td></tr>"
+
     html = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -624,6 +860,17 @@ def render_dashboard(ms, invoices, accounts, visits, validation_summary):
     font-weight: 600; background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; white-space: nowrap;
     vertical-align: middle; }}
 
+  /* Execution table row colouring — applied via inline style on <tr> */
+  .exec-wrap {{ max-height: 600px; overflow-y: auto; overflow-x: auto; }}
+  .check-yes {{ color: #16a34a; font-weight: 700; }}
+  .check-no  {{ color: #dc2626; }}
+  .odoo-yes  {{ color: #16a34a; font-weight: 700; text-align: center; }}
+  .odoo-no   {{ color: #d97706; font-weight: 700; text-align: center; }}
+  .pen-badge {{ display: inline-block; padding: 1px 6px; border-radius: 99px; font-size: .68rem; font-weight: 600; }}
+  .pen-yes   {{ background: #dcfce7; color: #166534; }}
+  .pen-no    {{ background: #fee2e2; color: #991b1b; }}
+  .num-sm    {{ text-align: right; }}
+
   footer {{ text-align: center; color: var(--muted); font-size: .75rem; padding: 24px 0 32px; }}
 </style>
 </head>
@@ -671,6 +918,38 @@ def render_dashboard(ms, invoices, accounts, visits, validation_summary):
     <div class="label">Visits Logged MTD{partial_badge}</div>
     <div class="value">{visits_mtd}</div>
     <div class="sub" style="color:var(--muted)">total visits</div>
+  </div>
+</div>
+
+<!-- EXECUTION TABLE -->
+<div class="section">
+  <div class="section-header">
+    Targeted Account Execution &mdash; {_ym_label(current_ym)}
+    <span class="badge">{exec_visited_count}/95 visited</span>
+    <span class="badge">{exec_invoiced_count}/95 invoiced</span>
+    <span style="font-size:.75rem;opacity:.75;margin-left:4px">95 accounts from the official plan | Matched to live Odoo data</span>
+  </div>
+  <div class="exec-wrap">
+    <table id="tblExec">
+      <thead>
+        <tr>
+          <th class="num" onclick="sortTable('tblExec',0,true)">#</th>
+          <th onclick="sortTable('tblExec',1)">Account Name</th>
+          <th onclick="sortTable('tblExec',2)">Tier</th>
+          <th onclick="sortTable('tblExec',3)">Penetration</th>
+          <th class="num" onclick="sortTable('tblExec',4,true)">Target FY (JOD)</th>
+          <th style="text-align:center" onclick="sortTable('tblExec',5)">Visited MTD</th>
+          <th style="text-align:center" onclick="sortTable('tblExec',6)">Invoiced MTD</th>
+          <th class="num" onclick="sortTable('tblExec',7,true)">Revenue MTD (JOD)</th>
+          <th class="num" onclick="sortTable('tblExec',8,true)">Revenue YTD (JOD)</th>
+          <th onclick="sortTable('tblExec',9)">Last Visit</th>
+          <th style="text-align:center" onclick="sortTable('tblExec',10)">Odoo</th>
+        </tr>
+      </thead>
+      <tbody>
+{exec_table_rows()}
+      </tbody>
+    </table>
   </div>
 </div>
 
@@ -904,9 +1183,10 @@ def main():
 
     models, uid = connect_odoo()
 
-    invoices = fetch_invoices(models, uid)
-    accounts = fetch_accounts(models, uid)
-    visits   = fetch_visits(models, uid)
+    invoices    = fetch_invoices(models, uid)
+    accounts    = fetch_accounts(models, uid)
+    visits      = fetch_visits(models, uid)
+    all_partners = fetch_all_partners(models, uid)
 
     print("-" * 40)
     validation_summary = validate_data(invoices, accounts, visits)
@@ -917,7 +1197,7 @@ def main():
     print(f"[BUILD] Coverage denominator: {ms['coverage_denom']} accounts (tiers KA/1/2/3)")
 
     print("-" * 40)
-    render_dashboard(ms, invoices, accounts, visits, validation_summary)
+    render_dashboard(ms, invoices, accounts, visits, all_partners, validation_summary)
 
     print("=" * 60)
     print("Done. Open dashboard.html in a browser.")
