@@ -11,7 +11,6 @@ permissions:
 jobs:
   refresh:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -36,8 +35,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git fetch origin main
-          git reset --soft origin/main
           git add dashboard.html
-          git diff --staged --quiet || git commit -m "Dashboard refresh $(date -u +'%Y-%m-%d %H:%M UTC')"
-          git push origin main --force
+          git commit -m "Dashboard refresh $(date -u +'%Y-%m-%d %H:%M UTC')" || true
+          git push --force origin main
