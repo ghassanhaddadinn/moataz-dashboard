@@ -30,6 +30,14 @@ TIER_LABELS = {
 }
 COVERAGE_TIERS = {"KA", "1", "2", "3"}
 
+# Partner ID overrides — for accounts where name matching fails
+# due to Arabic encoding differences or Odoo renames
+PARTNER_ID_OVERRIDES = {
+    "Zoo Keeper":                                          1120,
+    "جبل ارارت لتربية الحيوانات الاليفة - Abdoun":         1282,
+    "جبل ارارت لتربية الحيوانات الاليفة - Dabouq":         1003,
+}
+
 # ─── TARGETED ACCOUNTS (official plan, 95 accounts) ───────────────────────────
 # Tuple: (plan_name, tier_num, penetration_status, target_fy_jod)
 TARGETED_ACCOUNTS = [
@@ -59,7 +67,6 @@ TARGETED_ACCOUNTS = [
     ("Pet House - Khalda",                                                 1, "Penetrated",  3000),
     ("Pet House - Tlaa' Al-Ali",                                           2, "Penetrated",  1000),
     ("Infinity Pet Store",                                                 2, "Penetrated",  2000),
-    ("Pet Zone Khalda",                                                    2, "NO",          None),
     ("Nemo pet store",                                                     2, "NO",          1000),
     ("جبل ارارت لتربية الحيوانات الاليفة - Dabouq",                        1, "Penetrated",  6000),
     ("The Pet Hood",                                                       2, "Penetrated",  8000),
@@ -582,9 +589,14 @@ def build_execution_table(ms, all_partners, current_ym):
         partner_tier[p["id"]] = raw_tier
 
     def find_partner(plan_name):
+        # Check override map first (handles encoding mismatches and renames)
+        if plan_name in PARTNER_ID_OVERRIDES:
+            return PARTNER_ID_OVERRIDES[plan_name]
         norm_plan = plan_name.strip().lower()
+        # Exact match
         if norm_plan in norm_map:
             return norm_map[norm_plan]
+        # Partial match
         for norm_p, pid in norm_map.items():
             if norm_plan in norm_p or norm_p in norm_plan:
                 return pid
