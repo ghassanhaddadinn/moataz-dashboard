@@ -437,10 +437,12 @@ def build_top_accounts(ms, current_ym, top_n=25):
     return rows[:top_n]
 
 # ─── CONVERSION GAP ───────────────────────────────────────────────────────────
-def build_conversion_gap(ms, current_ym):
-    inv_month  = ms["inv_month"]
-    vis_month  = ms["vis_month"]
+def build_conversion_gap(ms, current_ym, all_partners=None):
+    inv_month   = ms["inv_month"]
+    vis_month   = ms["vis_month"]
     account_map = ms["account_map"]
+
+    fallback_names = {p["id"]: p["name"] for p in (all_partners or [])}
 
     month_invoice_partners = set(inv_month.get(current_ym, {}).keys())
     vis_partners = vis_month.get(current_ym, {})
@@ -450,9 +452,10 @@ def build_conversion_gap(ms, current_ym):
         if pid in month_invoice_partners:
             continue
         info = account_map.get(pid, {})
+        name = info.get("name") or fallback_names.get(pid) or f"Partner {pid}"
         last_visit = max(visits_list).strftime("%Y-%m-%d") if visits_list else ""
         rows.append({
-            "name":       info.get("name", f"Partner {pid}"),
+            "name":       name,
             "tier":       TIER_LABELS.get(info.get("tier") or "", "Untiered"),
             "visits_mtd": len(visits_list),
             "last_visit": last_visit,
@@ -724,7 +727,7 @@ def render_dashboard(ms, invoices, accounts, visits, all_partners, validation_su
     chart_cohort_churned  = [r["churned"] for r in cohort_last6]
 
     top_accounts   = build_top_accounts(ms, current_ym)
-    conv_gap       = build_conversion_gap(ms, current_ym)
+    conv_gap       = build_conversion_gap(ms, current_ym, all_partners)
     tier_perf      = build_tier_performance(ms, accounts, current_ym)
     cohort_rows    = cohort_data
     exec_rows      = build_execution_table(ms, all_partners, current_ym)
